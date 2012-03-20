@@ -1,11 +1,11 @@
 /*
- * messagemontroler.cpp
+ * messagecontroler.cpp
  *
  *  Created on: Mar 16, 2012
  *      Author: misteryyy
  */
 
-#include "messagemontroler.h"
+#include "messagecontroler.h"
 
 namespace client_server {
 
