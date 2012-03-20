@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 	while (true) {
 		Connection* conn = server.waitForActivity();
 		if (conn != 0) {
-				// Probably also some code here
+				// Some code here
 			try {
 				// HERE SHOULD BE THE CODE FOR WHAT THE PROGRAM SHOULD DO AFTER THE CONNECTION IS SETUP!
 				// IMPLEMENT HERE!

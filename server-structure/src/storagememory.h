@@ -19,7 +19,7 @@ public:
 	storagememory();
 	virtual ~storagememory();
 private:
-	//Some datastructure... think a map is the best!?
+	//Some datastructure... think a map is the best...
 	map<unsigned int, Newsgroup> newsgroups;
 };
 
