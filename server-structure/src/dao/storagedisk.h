@@ -8,12 +8,12 @@
 #ifndef STORAGEDISK_H_
 #define STORAGEDISK_H_
 
-namespace server_client {
+namespace client_server {
 
-class storagedisk {
+class StorageDisk {
 public:
-	storagedisk();
-	virtual ~storagedisk();
+	StorageDisk();
+   ~StorageDisk();
 };
 
 } /* namespace server_client */

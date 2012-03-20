@@ -1,20 +1,20 @@
 /*
- * storagedisk.cpp
+ * storagememory.cpp
  *
  *  Created on: 20 mar 2012
  *      Author: Chris
  */
 
-#include "storagedisk.h"
+#include "storagememory.h"
 
-namespace server_client {
+namespace client_server {
 
-storagedisk::storagedisk() {
+StorageMemory::StorageMemory() {
 	// TODO Auto-generated constructor stub
 
 }
 
-storagedisk::~storagedisk() {
+StorageMemory::~StorageMemory() {
 	// TODO Auto-generated destructor stub
 }
 

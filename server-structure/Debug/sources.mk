@@ -25,4 +25,6 @@ C_UPPER_DEPS :=
 SUBDIRS := \
 src \
 src/entities \
+src/dao \
+src/core \
 

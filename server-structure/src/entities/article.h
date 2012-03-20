@@ -19,7 +19,7 @@ public:
    ~Article();
 
 private:
-	unsigned int id;
+	int id;
 	User * user;
 	string name, text;
 };

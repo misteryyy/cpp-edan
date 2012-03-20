@@ -8,16 +8,23 @@
 #ifndef STORAGEMEMORY_H_
 #define STORAGEMEMORY_H_
 
+#include "../entities/article.h"
+#include "../entities/newsgroup.h"
+#include "../entities/user.h"
 #include <map>
+
+#include <string>
+
 
 using namespace std;
 
-namespace server_client {
+namespace client_server{
 
-class storagememory {
+class StorageMemory {
+
 public:
-	storagememory();
-	virtual ~storagememory();
+	StorageMemory();
+	 ~StorageMemory();
 private:
 	//Some datastructure... think a map is the best...
 	map<unsigned int, Newsgroup> newsgroups;

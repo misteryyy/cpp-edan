@@ -1,12 +1,12 @@
 /*
- * messagecontroler.h
+ * messagemontroler.h
  *
  *  Created on: Mar 16, 2012
  *      Author: misteryyy
  */
 
-#ifndef MESSAGECONTROLER_H_
-#define MESSAGECONTROLER_H_
+#ifndef MESSAGEMONTROLER_H_
+#define MESSAGEMONTROLER_H_
 
 namespace client_server {
 
@@ -17,4 +17,4 @@ public:
 };
 
 } /* namespace client_server */
-#endif /* MESSAGECONTROLER_H_ */
+#endif /* MESSAGEMONTROLER_H_ */

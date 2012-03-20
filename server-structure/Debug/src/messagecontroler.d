@@ -1,4 +1,4 @@
-src/messagemontroler.d: ../src/messagemontroler.cpp \
- ../src/messagemontroler.h
+src/messagecontroler.d: ../src/messagecontroler.cpp \
+ ../src/messagecontroler.h
 
-../src/messagemontroler.h:
+../src/messagecontroler.h:
