@@ -5,6 +5,7 @@
  *      Author: Chris
  *
  *  Description: This is the server we should implement...
+ *  			 It is a good idea to change the names and stuff later because this code is from the "myserver.cc"-example
  */
 
 #include "server.h"
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]) {
 		if (conn != 0) {
 				// Probably also some code here
 			try {
-				// HERE SHOULD BE THE COULD FOR WHAT THE PROGRAM SHOULD DO AFTER THE CONNECTION IS SETUP!
+				// HERE SHOULD BE THE CODE FOR WHAT THE PROGRAM SHOULD DO AFTER THE CONNECTION IS SETUP!
 				// IMPLEMENT HERE!
 			} catch (ConnectionClosedException&) {
 				server.deregisterConnection(conn);
