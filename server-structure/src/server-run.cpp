@@ -1,9 +1,9 @@
 //============================================================================
-// Name        : test-my-server.cpp
+// Name        : server-run.cpp
 // Author      : 
 // Version     :
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description : This is the server implementation.
 //============================================================================
 
 #include <iostream>
@@ -18,30 +18,6 @@
 using namespace std;
 using namespace client_server;
 
-
-/*
- * Server function
- * readNumber
- */
-int readNumber(Connection * conn) throw(ConnectionClosedException){
-	unsigned char byte1 = conn->read();
-	unsigned char byte2 = conn->read();
-	unsigned char byte3 = conn->read();
-	unsigned char byte4 = conn->read();
-	return (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
-}
-/*
- * Server, server output function
- */
-
-void writeString(const string& s, Connection * conn) throw(ConnectionClosedException){
-	for(size_t i=0; i < s.size(); ++i){
-		conn->write(s[i]);
-	}
-	conn->write('$');
-	// ‘$’ is end of string
-}
-
 /*
  * Main function of Server
  */
@@ -51,7 +27,7 @@ int main(int argc, char* argv[]){
 		//exit(1);
 	}
 
-	//For debug we can set this for some numbers -> 1024+
+	// For debug we can set this for some numbers -> 1024+
 	// There is problem, that if the program is not closed
 	// properly, we have to use other socket or kill the
 	// server manualy in the service manager. I guess :D // josef
@@ -59,44 +35,30 @@ int main(int argc, char* argv[]){
 	Server server(1301);
 
 	if (!server.isReady()) {
-	cerr << "Server initialization error" << endl;
-	exit(1);
+		cerr << "Server initialization error" << endl;
+		exit(1);
 	}
 
-	cout<< "Welcome to SERVER Frederik v 0.001" << endl;
 	//reading data from clients in cycle
 	while(true){
-
-		Connection * conn = server.waitForActivity();
+		Connection *conn = server.waitForActivity();
 		// new connection with client is establish
 		if(conn != 0){
 			cout << "Connection " << conn << " established";
 			try{
-				int nbr = readNumber(conn);
 
 				//response server login -> MessageController
-				if(nbr > 0){
-					writeString("Positive",conn);
-				} else if (nbr == 0){
-					writeString("Zero",conn);
-				} else {
-					writeString("Negative", conn);
-				}
 
 			}catch (ConnectionClosedException&){
 				server.deregisterConnection(conn);
 				delete conn;
 				cout << "Client closed connection" << endl;
-
 			}
-
-
-
 		}
-
-
-
-
+		else {
+            server.registerConnection(new Connection);
+            cout << "New client connects" << endl;
+        }
 	}
 	server.~Server();
 	return 0;
