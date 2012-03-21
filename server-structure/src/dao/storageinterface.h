@@ -10,26 +10,36 @@
 
 #include "../entities/article.h"
 #include "../entities/newsgroup.h"
-#include "../entities/user.h"
 #include <string>
 #include <map>
 using namespace std;
 
-namespace server_client{
+namespace client_server{
 class Article;
 class Newsgroup;
-class User;
+
+/*
+ * Defininition of shortcuts for datatypes
+ */
+typedef pair<unsigned,Newsgroup> ng_pair;
+typedef map<unsigned, Newsgroup> ng_map_type;
+typedef map<unsigned, Article>   art_map_type;
+typedef pair<unsigned,Article> art_pair;
 
 class StorageInterface {
 	public:
-		virtual ~StorageInterface(){};
-		virtual Article findArticle(int $id, Newsgroup & ng) =0;
-		virtual Article* createArticle(string name, User user, string text) = 0;
-		virtual Article* deleteArticle(int id) = 0;
-		virtual map<unsigned int, Article>* listArticles() = 0;
-		virtual Newsgroup* createNg(string) = 0;
-		virtual Newsgroup* deleteNg(unsigned int) = 0;
-		virtual map<unsigned int, Newsgroup>* listNg() = 0;
+
+		virtual int findArticle(int id)=0;
+		virtual int createArticle(int ng_id, const string & author ,const string & title,const string & text) = 0;
+		virtual bool deleteArticle(int id) = 0;
+		//virtual art_map_type& listArticles() = 0;
+		virtual int createNg(const string &) = 0;
+		virtual bool deleteNg(unsigned int) = 0;
+		virtual ng_map_type& listNg() = 0;
+		virtual art_map_type& listArticlesInNg(signed ng_id) =0;
+		virtual void debugPrint() const = 0;
+		virtual int findNg(const string &) = 0; // return reference to ng
+		virtual int findNg(int ng_id) = 0;
 	};
 }
 #endif /* STORAGEINTERFACE_H_ */

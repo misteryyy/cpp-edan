@@ -8,7 +8,6 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include src/entities/subdir.mk
 -include src/dao/subdir.mk
 -include src/core/subdir.mk
 -include src/subdir.mk
