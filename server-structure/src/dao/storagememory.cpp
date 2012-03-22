@@ -49,12 +49,9 @@ bool StorageMemory::deleteArticle(int id){
 		int id_ng =articles.find(id)->second.getNgId();
 		newsgroups.find(id_ng)->second.deleteArticleId(id);
 		// after delete article from the map
-		if (articles.erase(id)){
-			return true;
-		};
+		articles.erase(id);
 	}
-
-
+	return true;
 }
 
 /*
