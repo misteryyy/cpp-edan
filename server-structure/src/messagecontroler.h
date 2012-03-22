@@ -9,7 +9,8 @@
 #define MESSAGECONTROLER_H_
 
 #include <string>
-#include "../core/protocol.h"
+#include "core/protocol.h"
+#include "core/connection.h"
 
 using namespace std;
 
