@@ -24,18 +24,14 @@ int StorageMemory::lastArtId = 1;
  * Creates new Newsgroup
  * @return id of the last newsgroup
  */
-
-// TODO Why do we want to return lastNgId? Dont we just want to know if it was succesfull to add a newsgroup?
-int StorageMemory::createNg(const string & name){
+bool StorageMemory::createNg(const string & name){
 	// newsgroup exist, return id to the existing one
 	if(findNg(name)!= 0) {
-		// return id to existing newsgroup
-		return findNg(name);
+		return false;
 	} else {
 	newsgroups.insert(ng_pair(lastNgId,Newsgroup(lastNgId,name)));
-	return lastNgId++;
-
 	}
+	return true;
 }
 
 /*

@@ -33,7 +33,7 @@ class StorageInterface {
 		virtual int createArticle(int ng_id, const string & author ,const string & title,const string & text) = 0;
 		virtual bool deleteArticle(int id) = 0;
 		//virtual art_map_type& listArticles() = 0;
-		virtual int createNg(const string &) = 0;
+		virtual bool createNg(const string &) = 0;
 		virtual bool deleteNg(unsigned int) = 0;
 		virtual ng_map_type& listNg() = 0;
 		virtual art_map_type& listArticlesInNg(signed ng_id) =0;

@@ -6,16 +6,19 @@
 CPP_SRCS += \
 ../src/client-run-commented.cpp \
 ../src/messagecontroler.cpp \
+../src/messagecontroller.cpp \
 ../src/server-run.cpp 
 
 OBJS += \
 ./src/client-run-commented.o \
 ./src/messagecontroler.o \
+./src/messagecontroller.o \
 ./src/server-run.o 
 
 CPP_DEPS += \
 ./src/client-run-commented.d \
 ./src/messagecontroler.d \
+./src/messagecontroller.d \
 ./src/server-run.d 
 
 

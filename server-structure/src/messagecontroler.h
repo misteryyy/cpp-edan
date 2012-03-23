@@ -11,6 +11,7 @@
 #include <string>
 #include "core/protocol.h"
 #include "core/connection.h"
+#include "dao/storageinterface.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ namespace client_server {
 
 class MessageControler {
 public:
-	MessageControler(Connection* conn, StorageInterface* database);
+	MessageControler(Connection* conn, StorageInterface* database){}
 	virtual ~MessageControler();
 	// Change void to something...
 	void list_ng(); // list newsgroups

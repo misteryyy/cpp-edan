@@ -28,7 +28,7 @@ public:
 	 	virtual int createArticle(int ng_id, const string & author ,const string & title,const string & text);
 		virtual bool deleteArticle(int id);
 		// map<unsigned int, Article>* listArticles(){ return 0;};
-		virtual int createNg(const string &); // return id for the new added or existing newsgroup
+		virtual bool createNg(const string &); // return id for the new added or existing newsgroup
 		virtual bool deleteNg(unsigned int);
 		// Newsgroup* deleteNg(unsigned int){ return 0;};
 		ng_map_type& listNg();
