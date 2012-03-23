@@ -15,33 +15,10 @@
 #include "core/connectionclosedexception.h"
 #include "dao/storageinterface.h"
 #include "dao/storagefactory.h"
+#include "messagecontroler.h"
 
 using namespace std;
 using namespace client_server;
-
-/*
- * Server function
- * readNumber
- */
-int readNumber(Connection * conn) throw (ConnectionClosedException) {
-	unsigned char byte1 = conn->read();
-	unsigned char byte2 = conn->read();
-	unsigned char byte3 = conn->read();
-	unsigned char byte4 = conn->read();
-	return (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
-}
-
-/*
- * Server, server output function
- */
-void writeString(const string& s, Connection * conn)
-		throw (ConnectionClosedException) {
-	for (size_t i = 0; i < s.size(); i) {
-		conn->write(s[i]);
-	}
-	conn->write('$');
-	// ‘$’ is end of string
-}
 
 void testStorage() {
 	cout << "Welcome to SERVER Frederik v 0.001" << endl;
@@ -102,20 +79,25 @@ int main(int argc, char* argv[]) {
 	cout << "Welcome to SERVER Frederik v 0.001" << endl;
 
 	//reading data from clients in cycle
+	MessageControler mc = 0;
 	while (true) {
 		Connection * conn = server.waitForActivity();
 		// new connection with client is establish
 		if (conn != 0) {
 			cout << "Connection " << conn << " established";
 			try {
-				int nbr = readNumber(conn);
 				//response server login > MessageController
+				 mc = MessageControler::MessageControler(*conn);
 
 			} catch (ConnectionClosedException&) {
 				server.deregisterConnection(conn);
 				delete conn;
 				cout << "Client closed connection" << endl;
 			}
+		}
+		else {
+			server.registerConnection(new Connection);
+			cout << "New client connects" << endl;
 		}
 		server.~Server();
 	}

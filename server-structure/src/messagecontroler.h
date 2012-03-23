@@ -18,7 +18,7 @@ namespace client_server {
 
 class MessageControler {
 public:
-	MessageControler(Connection conn);
+	MessageControler(Connection* conn, StorageInterface* database);
 	virtual ~MessageControler();
 	// Change void to something...
 	void list_ng(); // list newsgroups
@@ -28,7 +28,10 @@ public:
 	void create_art(); // create article
 	void delete_art(); // delete article
 	void get_art(); // get article
-
+	int readNumber();
+	void writeString(const string& s);
+	void sendInt(int value); //JAVA CODE...need change?!
+	string recvStringParam(); //JAVA CODE...need change?!
 };
 
 } /* namespace client_server */
