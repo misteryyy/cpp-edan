@@ -11,9 +11,21 @@
 #include "dao/storageinterface.h"
 #include "dao/storagefactory.h"
 #include "core/connectionclosedexception.h"
+#include <sstream>
+#include <iostream>
+#include <string>
+#include <cstdlib>
 using namespace protocol;
 using namespace std;
 namespace client_server {
+
+int readNumber(Connection * conn) throw (ConnectionClosedException) {
+	unsigned char byte1 = conn->read();
+	unsigned char byte2 = conn->read();
+	unsigned char byte3 = conn->read();
+	unsigned char byte4 = conn->read();
+	return (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
+}
 
 MessageController::MessageController() {
 	storage = StorageFactory::getDAO("memory");
@@ -32,30 +44,29 @@ void MessageController::writeString(const string& s, Connection * conn)
 	// ‘$’ is end of string
 }
 
-void MessageController::execute(int command, string& message,
-		Connection * conn) {
+void MessageController::execute(int command, Connection * conn) {
 	switch (command) {
 
 	case Protocol::COM_LIST_NG:
 		listNG(conn);
 		break;
 	case Protocol::COM_CREATE_NG:
-		createNG(message, conn);
+		createNG(conn);
 		break;
 	case Protocol::COM_DELETE_NG:
-		deleteNG(message, conn);
+		deleteNG(conn);
 		break;
 	case Protocol::COM_LIST_ART:
-		listArt(message, conn);
+		listArt(conn);
 		break;
 	case Protocol::COM_CREATE_ART:
-		createArt(message, conn);
+		createArt(conn);
 		break;
 	case Protocol::COM_DELETE_ART:
-		deleteArt(message, conn);
+		deleteArt(conn);
 		break;
 	case Protocol::COM_GET_ART:
-		getArt(message, conn);
+		getArt(conn);
 		break;
 
 	default:
@@ -64,9 +75,31 @@ void MessageController::execute(int command, string& message,
 	}
 }
 
+string MessageController::readString(Connection* conn){
+	unsigned char type = conn->read();
+	if(type != Protocol::PAR_STRING){
+		cerr << "fail: " << type << endl;
+	}
+	int lengthOfMessage = readNumber(conn);
+	unsigned char nbr;
+	string mess;
+	for(int i =0; i < lengthOfMessage; i++){
+		stringstream ss;
+		nbr = conn->read();
+		//cout << nbr << endl;
+		ss << mess << nbr;
+		ss >> mess;
+	}
+	mess = mess.substr(0, mess.size() - 1);
+	return mess;
+}
+
 void MessageController::listNG(Connection * conn){}
 
-void MessageController::createNG(string& message, Connection * conn){
+void MessageController::createNG(Connection * conn){
+	string message;
+	message= readString(conn);
+
 	bool create;
 	create = storage->createNg(message);
 	writeString(Protocol::ANS_CREATE_NG+"", conn);
@@ -80,11 +113,11 @@ void MessageController::createNG(string& message, Connection * conn){
 	cout << "Newsgroup: " << message << " created" << endl;
 }
 
-void MessageController::deleteNG(string& message, Connection * conn){}
-void MessageController::listArt(string& message, Connection * conn){}
-void MessageController::createArt(string& message, Connection * conn){}
-void MessageController::deleteArt(string& message, Connection * conn){}
-void MessageController::getArt(string& message, Connection * conn){}
+void MessageController::deleteNG(Connection * conn){}
+void MessageController::listArt(Connection * conn){}
+void MessageController::createArt(Connection * conn){}
+void MessageController::deleteArt(Connection * conn){}
+void MessageController::getArt(Connection * conn){}
 
 
 }

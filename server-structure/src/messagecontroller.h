@@ -15,15 +15,16 @@ class MessageController {
 public:
 	MessageController();
 	virtual ~MessageController();
-	void execute(int command, string& message, Connection* conn);
+	void execute(int command, Connection* conn);
 	void writeString(const string& s, Connection * conn)throw (ConnectionClosedException);
+	string readString(Connection* conn);
 	void listNG(Connection * conn);
-	void createNG(string& message, Connection * conn);
-	void deleteNG(string& message, Connection * conn);
-	void listArt(string& message, Connection * conn);
-	void createArt(string& message, Connection * conn);
-	void deleteArt(string& message, Connection * conn);
-	void getArt(string& message, Connection * conn);
+	void createNG(Connection * conn);
+	void deleteNG(Connection * conn);
+	void listArt( Connection * conn);
+	void createArt(Connection * conn);
+	void deleteArt( Connection * conn);
+	void getArt(Connection * conn);
 
 private:
  	 StorageInterface * storage;

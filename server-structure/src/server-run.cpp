@@ -23,21 +23,7 @@ using namespace std;
 using namespace client_server;
 using namespace protocol;
 
-/*
- * Server function
- * readNumber
- */
-int readNumber(Connection * conn) throw (ConnectionClosedException) {
-	unsigned char byte1 = conn->read();
-	unsigned char byte2 = conn->read();
-	unsigned char byte3 = conn->read();
-	unsigned char byte4 = conn->read();
-	return (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
-}
 
-/*
- * Server, server output function
- */
 
 
 void testStorage() {
@@ -78,37 +64,9 @@ void testStorage() {
 	storage->debugPrint();
 
 }
-
-int readCommand(Connection* conn) {
-	unsigned char nbr = conn->read();
-	//cout << "Command: " << nbr << endl;
-	conn->read();
-	conn->read();
-	conn->read();
-	conn->read();
-	conn->read();
-	return nbr;
-}
-string readStringTillEnd(Connection* conn) {
-	unsigned char nbr;
-	string mess;
-	while (nbr != Protocol::COM_END) {
-		stringstream ss;
-		nbr = conn->read();
-		//cout << nbr << endl;
-		ss << mess << nbr;
-		ss >> mess;
-	}
-	mess = mess.substr(0, mess.size() - 1);
-	return mess;
-}
-
-/*
- * Main function of Server
- */
 int main(int argc, char* argv[]) {
 	MessageController mc;
-	const int defaultPort = 30002;
+	const int defaultPort = 30004;
 	if (argc != 2) {
 		cerr << "No port defined. Usage: myserver portnumber " << endl;
 		cout << "Using default port:" << defaultPort << " instead " << endl;
@@ -123,9 +81,8 @@ int main(int argc, char* argv[]) {
 		Connection* conn = server.waitForActivity();
 		if (conn != 0) {
 			try {
-				int command = readCommand(conn);
-				string s = readStringTillEnd(conn);
-				mc.execute(command, s, conn);
+				int command = conn->read();
+				mc.execute(command, conn);
 				//cout<<"Command was:"<<command<<"string was: "<<s<<endl;
 			} catch (ConnectionClosedException&) {
 				server.deregisterConnection(conn);
