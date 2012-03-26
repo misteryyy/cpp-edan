@@ -29,14 +29,12 @@ int StorageMemory::lastArtId = 1;
  * @return Newsgroup& ; if NG exists throw exception
  * @throws newsgroup_already_exists
  */
-Newsgroup& StorageMemory::createNg(const string & name) throw (newsgroup_already_exists){
+void StorageMemory::createNg(const string & name) throw (newsgroup_already_exists){
 	// newsgroup exist, return id to the existing one
 	if(findNg(name)!= 0) throw newsgroup_already_exists();
 
 	newsgroups.insert(ng_pair(lastNgId,Newsgroup(lastNgId,name)));
 	lastNgId++; // incrementing id
-	return newsgroups.find(lastNgId-1)->second; // return reference to new newsgroup
-
 }
 
 
@@ -221,8 +219,6 @@ Article& StorageMemory::findArticle(int id,int ng_id) throw(newsgroup_doesnt_exi
 	 		return false;
 	 	}
  }
-
-
 
 
 /* ----------------------------------

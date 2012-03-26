@@ -5,7 +5,6 @@
 // Copyright   : Your copyright notice
 // Description : Hello World in C, Ansistyle
 //============================================================================
-
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -20,12 +19,15 @@
 #include "dao/storageinterface.h"
 #include "dao/storagefactory.h"
 #include "messagecontroller.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fstream>
 
 using namespace std;
 using namespace client_server;
 using namespace protocol;
 
-void testStorage() {
+void testStorageMemory() {
 	cout << "Welcome to SERVER Frederik v 0.001" << endl;
 
 	// setting up storage for data using Factory Pattern
@@ -33,13 +35,10 @@ void testStorage() {
 	StorageInterface * storage = StorageFactory::getDAO("memory"); // other option database for using filesystem
 
 	// create and list Newsgroup test
-	Newsgroup& ng1 = storage->createNg("NG 1");
-	Newsgroup& ng2 = storage->createNg("NG 2");
-	Newsgroup& ng3 = storage->createNg("NG 3");
+	 storage->createNg("NG 1");
+	 storage->createNg("NG 2");
+	 storage->createNg("NG 3");
 
-	assert(ng1.getId() == 1);
-	assert(ng2.getId() == 2);
-	assert(ng3.getId() == 3);
 
 	try{
 		storage->createNg("NG 3"); // duplicity is not added
@@ -106,9 +105,6 @@ void testStorage() {
 		cout << "FIND Article: Article doesn't exists";
 	}
 
-
-
-
 	// Delete NG test
 	try{
 	//storage->debugPrint();
@@ -128,9 +124,28 @@ void testStorage() {
 	}
 
 }
+
+void testStorageDisk() {
+	cout << "Welcome to SERVER Frederik v 0.001 / DISK STORAGE" << endl;
+
+	// setting up storage for data using Factory Pattern
+	// options : memory || database
+	StorageInterface * storage = StorageFactory::getDAO("disk"); // other option database for using filesystem
+
+	// create and list Newsgroup test
+	//storage->createNg("NG 1");
+	 //storage->createNg("NG 2");
+	//storage->createNg("NG 3");
+
+}
+
+
 int main(int argc, char* argv[]) {
-	MessageController mc;
-	testStorage();
+	//MessageController mc;
+	//testStorageMemory();
+	testStorageDisk();
+
+
 
 
 //	const int defaultPort = 30004;

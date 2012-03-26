@@ -11,6 +11,7 @@
 using namespace std;
 #include "storageinterface.h"
 #include "storagememory.h"
+#include "storagedisk.h"
 
 namespace client_server{
 
@@ -18,11 +19,13 @@ namespace client_server{
 class StorageFactory{
 public:
 	static StorageInterface * getDAO(const string &type ){
-			if(type == "memory"){
+
+
+		if(type == "memory"){
 				return new StorageMemory;
 			}
-			if(type == "database"){
-				//return new StorageMemory;
+			if(type == "disk"){
+				return new StorageDisk;
 			}
 			return 0;
 	}

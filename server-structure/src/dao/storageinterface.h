@@ -39,7 +39,7 @@ class StorageInterface {
 		/**
 		 * Newsgroup methods
 		 */
-		virtual Newsgroup& createNg(const string &) throw(newsgroup_already_exists) = 0;
+		virtual void createNg(const string &) throw(newsgroup_already_exists) = 0;
 		virtual void deleteNg(unsigned int) throw(newsgroup_doesnt_exists) = 0;
 		virtual ng_map_type& listNg() = 0;
 
@@ -53,8 +53,6 @@ class StorageInterface {
 		virtual Article& findArticle(int id,int ng_id)throw(newsgroup_doesnt_exists,article_doesnt_exists) = 0; // return reference to Article
 
 		virtual art_map_type& listArticles() = 0;
-
-
 
 		/**
 		 * Debugging methods

@@ -25,9 +25,9 @@ public:
 		/**
 		* Newsgroup methods
 		*/
-		virtual Newsgroup& createNg(const string &) throw(newsgroup_already_exists);
+		virtual void createNg(const string &) throw(newsgroup_already_exists);
 		virtual void deleteNg(unsigned int) throw(newsgroup_doesnt_exists);
-		ng_map_type& listNg();
+		virtual ng_map_type& listNg();
 
 
 		/**
