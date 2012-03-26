@@ -21,12 +21,11 @@ class Article {
 
 	friend std::ostream& operator<<(std::ostream& os, const Article & a){
 		os << a.id << "," << a.ng_id << "," << a.author <<","<< a.name << "," << a.text << ";";
-
 		return os;
 	};
 
 public:
-	Article (int idp, int ng_idp, const string & auth ,const string & namep,const string & textp) {
+	Article (int idp, int ng_idp, const string & namep,const string & auth,const string & textp) {
 		id=idp; ng_id=ng_idp; name = namep; text=textp; author=auth;
 	};
 
@@ -53,8 +52,6 @@ private:
 	int id;
 	int ng_id; // foreign key for newsgroup
 	string name, text, author;
-
-
 };
 
 } /* namespace client_server */

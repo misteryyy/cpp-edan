@@ -8,6 +8,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/entities/subdir.mk
 -include src/dao/subdir.mk
 -include src/core/subdir.mk
 -include src/subdir.mk
@@ -40,19 +41,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: server-structure
+all: server-structure-gitrepo
 
 # Tool invocations
-server-structure: $(OBJS) $(USER_OBJS)
+server-structure-gitrepo: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++  -o "server-structure" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o "server-structure-gitrepo" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) server-structure
+	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) server-structure-gitrepo
 	-@echo ' '
 
 .PHONY: all clean dependents

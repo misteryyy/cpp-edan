@@ -22,7 +22,6 @@ class Newsgroup {
 	friend std::istream& operator>>(std::istream& is, Newsgroup& d);
 	friend std::ostream& operator<<(std::ostream& os, const Newsgroup& d){
 		os << d.id << "," << d.name << ",";
-
 		// displaying articles in the group
 		os << "article_ids:";
 		ostream_iterator<signed> out_it (os,", ");
@@ -53,6 +52,7 @@ public:
    	set<unsigned>& getArticlesId(){
    		return articles;
    	}
+
    	bool deleteArticleId(unsigned id){
    		return articles.erase(id);
    	}

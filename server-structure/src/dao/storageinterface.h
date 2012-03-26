@@ -15,6 +15,13 @@
 using namespace std;
 
 namespace client_server{
+
+// exceptions
+struct article_doesnt_exists {};
+struct newsgroup_already_exists {};
+struct newsgroup_doesnt_exists {};
+
+
 class Article;
 class Newsgroup;
 
@@ -29,17 +36,32 @@ typedef pair<unsigned,Article> art_pair;
 class StorageInterface {
 	public:
 
-		virtual int findArticle(int id)=0;
-		virtual int createArticle(int ng_id, const string & author ,const string & title,const string & text) = 0;
-		virtual bool deleteArticle(int id) = 0;
-		//virtual art_map_type& listArticles() = 0;
-		virtual bool createNg(const string &) = 0;
-		virtual bool deleteNg(unsigned int) = 0;
+		/**
+		 * Newsgroup methods
+		 */
+		virtual Newsgroup& createNg(const string &) throw(newsgroup_already_exists) = 0;
+		virtual void deleteNg(unsigned int) throw(newsgroup_doesnt_exists) = 0;
 		virtual ng_map_type& listNg() = 0;
-		virtual art_map_type& listArticlesInNg(signed ng_id) =0;
+
+		/**
+		 * Article methods
+		 */
+		virtual art_map_type listArticlesInNg(signed ng_id) throw(newsgroup_doesnt_exists) =0;
+		virtual int createArticle(int ng_id, const string & title ,const string & author,const string & text) throw(newsgroup_doesnt_exists) = 0;
+		virtual void deleteArticle(int id, int ng_id) throw(newsgroup_doesnt_exists,article_doesnt_exists)= 0;
+
+		virtual Article& findArticle(int id,int ng_id)throw(newsgroup_doesnt_exists,article_doesnt_exists) = 0; // return reference to Article
+
+		virtual art_map_type& listArticles() = 0;
+
+
+
+		/**
+		 * Debugging methods
+		 */
 		virtual void debugPrint() const = 0;
-		virtual int findNg(const string &) = 0; // return reference to ng
-		virtual int findNg(int ng_id) = 0;
+
+
 	};
 }
 #endif /* STORAGEINTERFACE_H_ */

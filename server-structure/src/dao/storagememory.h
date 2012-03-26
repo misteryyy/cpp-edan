@@ -2,7 +2,7 @@
  * storagememory.h
  *
  *  Created on: 20 mar 2012
- *      Author: Chris
+ *      Author: Josef
  */
 
 #ifndef STORAGEMEMORY_H_
@@ -14,34 +14,44 @@
 #include <map>
 #include <string>
 
-
 using namespace std;
 namespace client_server{
 
 class StorageMemory : public StorageInterface {
 
 public:
-	StorageMemory(){};
-	 ~StorageMemory(){};
-		virtual int findArticle(int id);
-	 	virtual art_map_type& listArticlesInNg(signed ng_id);
-	 	virtual int createArticle(int ng_id, const string & author ,const string & title,const string & text);
-		virtual bool deleteArticle(int id);
-		// map<unsigned int, Article>* listArticles(){ return 0;};
-		virtual bool createNg(const string &); // return id for the new added or existing newsgroup
-		virtual bool deleteNg(unsigned int);
-		// Newsgroup* deleteNg(unsigned int){ return 0;};
+		StorageMemory(){};
+		~StorageMemory(){};
+		/**
+		* Newsgroup methods
+		*/
+		virtual Newsgroup& createNg(const string &) throw(newsgroup_already_exists);
+		virtual void deleteNg(unsigned int) throw(newsgroup_doesnt_exists);
 		ng_map_type& listNg();
-		virtual void debugPrint() const;
-		virtual int findNg(const string &); // return 0 if no match
-		virtual int findNg(int ng_id);
 
 
+		/**
+		 * Article methods
+		 */
+	 	virtual art_map_type listArticlesInNg(signed ng_id) throw(newsgroup_doesnt_exists);
+		virtual int createArticle(int ng_id, const string & title ,const string & author,const string & text) throw(newsgroup_doesnt_exists);
+	  	virtual void deleteArticle(int id, int ng_id)  throw(newsgroup_doesnt_exists,article_doesnt_exists);
+	  	virtual Article& findArticle(int id,int ng_id) throw(newsgroup_doesnt_exists,article_doesnt_exists) ; // return reference to Article
+	  	virtual art_map_type& listArticles();
+
+	  	// not implemented in StorageInterface - for internal usage
+	 	int testArticleId(int id, int ng_id); // tests if the article ID exists
+	 	int findNg(const string &); // return 0 if no match
+	 	int findNg(int ng_id);
+
+	 	/**
+	 	 * Debugging methods
+	 	 */
+	 	virtual void debugPrint() const;
 
 private:
-	//Some datastructure... think a map is the best...
-	ng_map_type newsgroups;
-	art_map_type articles;
+	ng_map_type newsgroups; // list of newsgroup
+	art_map_type articles; // list of articles
 	static int lastNgId,lastArtId; // static variable which remember the last id of newsgroup
 
 };

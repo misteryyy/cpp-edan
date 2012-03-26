@@ -100,17 +100,30 @@ void MessageController::createNG(Connection * conn){
 	string message;
 	message= readString(conn);
 
-	bool create;
-	create = storage->createNg(message);
-	writeString(Protocol::ANS_CREATE_NG+"", conn);
-	if (create) {
+	// NEW WAY OF USING DAO
+	try{
+		storage->createNg(message);
 		writeString(Protocol::ANS_ACK+"", conn);
-	} else {
+
+	}catch (newsgroup_already_exists e){
 		writeString(Protocol::ANS_NAK+"", conn);
 		writeString(Protocol::ERR_NG_ALREADY_EXISTS+"", conn);
 	}
+
 	writeString(Protocol::ANS_END+"", conn);
-	cout << "Newsgroup: " << message << " created" << endl;
+	cout << "A PORAD JSEM TU" << endl;
+
+//	bool create;
+//	create = storage->createNg(message);
+//	writeString(Protocol::ANS_CREATE_NG+"", conn);
+//	if (create) {
+//		writeString(Protocol::ANS_ACK+"", conn);
+//	} else {
+//		writeString(Protocol::ANS_NAK+"", conn);
+//		writeString(Protocol::ERR_NG_ALREADY_EXISTS+"", conn);
+//	}
+//	writeString(Protocol::ANS_END+"", conn);
+//	cout << "Newsgroup: " << message << " created" << endl;
 }
 
 void MessageController::deleteNG(Connection * conn){}
