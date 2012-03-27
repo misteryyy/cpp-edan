@@ -47,6 +47,12 @@ public:
    	int getNgId(){return ng_id;};
    	void setName(const string & in_name){ name=in_name;}
 
+   	string const & getAuthor()const {return author;} ;
+
+
+   	string const & getText()const {return text;} ;
+
+
 
 private:
 	int id;

@@ -45,6 +45,12 @@ void StorageMemory::createNg(const string & name) throw (newsgroup_already_exist
  */
 void StorageMemory::deleteNg(unsigned int index)  throw(newsgroup_doesnt_exists){
 
+	//Checking index!
+	for (map<unsigned, Newsgroup>::iterator it = newsgroups.begin(); it != newsgroups.end(); it++){
+		cout << "Index: " << it->first << endl;
+		cout << "Ng Name: " << it->second.getName() << endl;;
+	}
+
 	try{
 	Newsgroup& n  = newsgroups.at(index); // throw exception if not found
 

@@ -141,41 +141,41 @@ void testStorageDisk() {
 
 
 int main(int argc, char* argv[]) {
-	//MessageController mc;
+	MessageController mc;
 	//testStorageMemory();
-	testStorageDisk();
+//	testStorageDisk();
 
 
 
 
-//	const int defaultPort = 30004;
-//	if (argc != 2) {
-//		cerr << "No port defined. Usage: myserver portnumber " << endl;
-//		cout << "Using default port:" << defaultPort << " instead " << endl;
-//		//exit(1);
-//	}
-//
-//	Server server(defaultPort);
-//	if (!server.isReady()) {
-//		cerr << "Server initialization error" << endl;
-//		exit(1);
-//	}
-//	while (true) {
-//		Connection* conn = server.waitForActivity();
-//		if (conn != 0) {
-//			try {
-//				int command = conn->read();
-//				mc.execute(command, conn);
-//				//cout<<"Command was:"<<command<<"string was: "<<s<<endl;
-//			} catch (ConnectionClosedException&) {
-//				server.deregisterConnection(conn);
-//				delete conn;
-//				cout << "Client closed connection" << endl;
-//			}
-//		} else {
-//			server.registerConnection(new Connection);
-//			cout << "New client connects" << endl;
-//		}
-//	}
+	const int defaultPort = 30004;
+	if (argc != 2) {
+		cerr << "No port defined. Usage: myserver portnumber " << endl;
+		cout << "Using default port:" << defaultPort << " instead " << endl;
+		//exit(1);
+	}
+
+	Server server(defaultPort);
+	if (!server.isReady()) {
+		cerr << "Server initialization error" << endl;
+		exit(1);
+	}
+	while (true) {
+		Connection* conn = server.waitForActivity();
+		if (conn != 0) {
+			try {
+				int command = conn->read();
+				mc.execute(command, conn);
+				//cout<<"Command was:"<<command<<"string was: "<<s<<endl;
+			} catch (ConnectionClosedException&) {
+				server.deregisterConnection(conn);
+				delete conn;
+				cout << "Client closed connection" << endl;
+			}
+		} else {
+			server.registerConnection(new Connection);
+			cout << "New client connects" << endl;
+		}
+	}
 }
 
