@@ -35,6 +35,7 @@ typedef pair<unsigned,Article> art_pair;
 
 class StorageInterface {
 	public:
+	virtual ~StorageInterface(){};
 
 		/**
 		 * Newsgroup methods
@@ -58,8 +59,9 @@ class StorageInterface {
 		 * Debugging methods
 		 */
 		virtual void debugPrint() const = 0;
-
-
 	};
+
+
 }
+
 #endif /* STORAGEINTERFACE_H_ */

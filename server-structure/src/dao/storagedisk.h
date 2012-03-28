@@ -21,8 +21,8 @@ namespace client_server {
 
 class StorageDisk : public StorageInterface {
 public:
-	StorageDisk();
-   ~StorageDisk();
+		StorageDisk();
+		virtual ~StorageDisk();
 
    	    /**
    		* Newsgroup methods
@@ -40,15 +40,19 @@ public:
    		virtual Article& findArticle(int id,int ng_id) throw(newsgroup_doesnt_exists,article_doesnt_exists); // return reference to Article
    		virtual art_map_type& listArticles();
 
+   	 	int testArticleId(int id, int ng_id); // tests if the article ID exists
+   		int findNg(const string &); // return 0 if no match
+   		int findNg(int ng_id);
+   		void buildNgList();
+
    	 	/**
    		 * Debugging methods
    		 */
    		 virtual void debugPrint() const;
 private:
-   		void listFile();
    		ng_map_type newsgroups; // list of newsgroup
    		art_map_type articles; // list of articles
-   		static int lastNgId,lastArtId; // static variable which remember the last id of newsgroup
+   		int lastNgId,lastArtId; // these values are loaded from the file, from the last save
    		string baseDir;
 };
 

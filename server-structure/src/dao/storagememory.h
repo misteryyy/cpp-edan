@@ -21,7 +21,10 @@ class StorageMemory : public StorageInterface {
 
 public:
 		StorageMemory(){};
-		~StorageMemory(){};
+		 virtual ~StorageMemory(){
+			cout << "Destructor v Memory" << endl;
+		};
+
 		/**
 		* Newsgroup methods
 		*/

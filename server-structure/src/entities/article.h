@@ -9,6 +9,8 @@
 #define ARTICLE_H_
 
 #include <iostream>
+#include <string>
+#include <sstream>
 
 using namespace std;
 namespace client_server {
@@ -46,13 +48,15 @@ public:
    	int getId(){return id;};
    	int getNgId(){return ng_id;};
    	void setName(const string & in_name){ name=in_name;}
+   	string getFileName(){
 
-   	string const & getAuthor()const {return author;} ;
-
-
-   	string const & getText()const {return text;} ;
-
-
+   	    	stringstream out;
+   	    	out << id;
+   	    	string id_s = out.str();
+   	return id_s +"-" + name + "-" + author;
+   	}
+    string const & getAuthor()const {return author;} ;
+    string const & getText()const {return text;} ;
 
 private:
 	int id;

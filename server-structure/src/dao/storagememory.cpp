@@ -32,7 +32,6 @@ int StorageMemory::lastArtId = 1;
 void StorageMemory::createNg(const string & name) throw (newsgroup_already_exists){
 	// newsgroup exist, return id to the existing one
 	if(findNg(name)!= 0) throw newsgroup_already_exists();
-
 	newsgroups.insert(ng_pair(lastNgId,Newsgroup(lastNgId,name)));
 	lastNgId++; // incrementing id
 }
