@@ -192,6 +192,7 @@ void StorageMemory::deleteArticle(int id, int ng_id)  throw(newsgroup_doesnt_exi
 	articles.erase(id);
 }
 
+// Are we using this somewhere???
 art_map_type& StorageMemory::listArticles(){
 		return articles;
 }

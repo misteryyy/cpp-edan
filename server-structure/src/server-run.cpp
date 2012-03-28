@@ -237,9 +237,7 @@ int main(int argc, char* argv[]) {
 
 	// dont forget to use delete when you will be finished with the using of storage
 	// in constructor is method for saving id for next session
-	testStorageDisk();
-
-
+	//testStorageDisk();
 
 
 	const int defaultPort = 30004;
@@ -259,7 +257,8 @@ int main(int argc, char* argv[]) {
 		if (conn != 0) {
 			try {
 				int command = conn->read();
-				mc.execute(command, conn);
+				Server* server = server;
+				mc.execute(command, conn, server);
 				//cout<<"Command was:"<<command<<"string was: "<<s<<endl;
 			} catch (ConnectionClosedException&) {
 				server.deregisterConnection(conn);
