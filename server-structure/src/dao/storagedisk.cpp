@@ -323,8 +323,7 @@ int StorageDisk::createArticle(int ng_id, const string & title ,const string & a
 * @returns list
 * @throws newsgroup_doesnt_exists
 */
-art_map_type StorageDisk::listArticlesInNg(signed ng_id) throw(newsgroup_doesnt_exists)
-{
+art_map_type StorageDisk::listArticlesInNg(signed ng_id) throw(newsgroup_doesnt_exists){
 	if ( findNg(ng_id) == 0) throw newsgroup_doesnt_exists(); //
 
 	// getNG name and id, to find folder
@@ -332,7 +331,9 @@ art_map_type StorageDisk::listArticlesInNg(signed ng_id) throw(newsgroup_doesnt_
 	//cout << " Finding articles in : " << dir_ng << endl;
 
 	// return list of articles
-	art_map_type articles_in_ng;
+	//art_map_type articles_in_ng;
+	articles.clear(); // clean for sure
+
 	  	 DIR *pDIR;
 	  	 struct dirent *entry;
 
@@ -345,49 +346,34 @@ art_map_type StorageDisk::listArticlesInNg(signed ng_id) throw(newsgroup_doesnt_
 		                	//cout << entry->d_name << "\n"; // d_name is char array, we need string
 		                	string article_name(entry->d_name); // creating of string variable
 
+
 		                	vector<string> article_parse = split(article_name,'-'); // expected size 2 ID-Title-Author
 				             	if(article_parse.size() == 3){ // 3 parameters ID,Title,Author
-
 				             		int article_id = getIntFromString(article_parse[0]);
-				             		string article_title = article_parse[1];
-				             		string article_author = article_parse[2];
+					             	string article_title = article_parse[1];
+					             	string article_author = article_parse[2];
 
-				             		// reading text
-				             		string file_path = dir_ng + "/" + article_name;
-				             		ifstream infile(file_path.c_str());
+					            	// reading text
+					             	string file_path = dir_ng + "/" + article_name;
+					             	ifstream infile(file_path.c_str());
+					             	string article_text((istreambuf_iterator<char>(infile)),istreambuf_iterator<char>());
 
-				             		string line;
-				             		string article_text;
-				             		// reading the file content in lines
-				             			if (infile.is_open())
-				             		     {
-				             		       while ( infile.good() )
-				             		       {
-				             		         getline (infile,line);
-				             		         article_text += line; // reading all lines in the file
-				             		       }
-				             		       infile.close();
-				             		     }
-				             		     else {
-				             		    	 cout << "Unable to open file:" << file_path << endl;
-				             		     }
+					             	Article a(article_id,ng_id,article_title,article_author,article_text);
+					             //	cout << a << endl;
 
-				         Article a(article_id,ng_id,article_title,article_author,article_text);
-				        // cout << "This article has :" << a << endl;
-
-				         // saving to the filtered articles list
-				         articles_in_ng.insert(art_pair(article_id,a));
+					             	articles.insert(art_pair(article_id,a));
+					             	// saving to the filtered articles list
+					             	//articles_in_ng.insert(art_pair( article_id, Article(article_id,ng_id,article_title,article_author,article_text)) );
+				             	}
 				         }
-
 		        }
 
 			}
 			closedir(pDIR);
-		  }
-
-	return articles_in_ng;
+			return articles;
 
 }
+
 
 
 /*
@@ -404,8 +390,6 @@ void StorageDisk::deleteArticle(int id, int ng_id)  throw(newsgroup_doesnt_exist
 
 	//cout << "This article will be deleted" << remove(article_path.c_str()) << endl;
 	if(remove(article_path.c_str()) != 0) throw article_doesnt_exists(); // something bad happened with the file :D
-
-
 
 }
 
@@ -424,7 +408,6 @@ Article& StorageDisk::findArticle(int id,int ng_id) throw(newsgroup_doesnt_exist
 	if ( findNg(ng_id) == 0) throw newsgroup_doesnt_exists(); //
 
 	if(testArticleId(id,ng_id) == 0 ) throw article_doesnt_exists();
-
 
 	return listArticlesInNg(ng_id).find(id)->second;
 }
