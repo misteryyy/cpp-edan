@@ -270,5 +270,8 @@ int main(int argc, char* argv[]) {
 			cout << "New client connects" << endl;
 		}
 	}
+	cout << "Should run destructur" << endl;
+	// should run destructur here...
+	delete mc;
 }
 
