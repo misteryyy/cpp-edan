@@ -81,6 +81,8 @@ MessageController::MessageController(){
 
 MessageController::~MessageController() {
 	// TODO Auto-generated destructor stub
+	cout << "running messagecontroller destructur" << endl;
+	delete storage;
 }
 
 /*
@@ -133,8 +135,8 @@ void MessageController::execute(int command, Connection * conn, Server * server)
 	default:
 		cerr << "Protocol failure: Bad command, expected a COM_ type of command" << endl;
 		cerr << "Closing connection to server." << endl;
-			server->deregisterConnection(conn);
-			delete conn;
+		server->deregisterConnection(conn);
+		delete conn;
 		break;
 
 	}

@@ -399,7 +399,7 @@ art_map_type& StorageDisk::listArticles(){
 }
 
 /*
- * Deletes article by id and ng_id
+ * find article by id and ng_id
  * @return Article& reference to the Article Entity
  * @throws newsgroup_doesnt_exists or article_doesnt_exists
  */
@@ -409,6 +409,10 @@ Article& StorageDisk::findArticle(int id,int ng_id) throw(newsgroup_doesnt_exist
 
 	if(testArticleId(id,ng_id) == 0 ) throw article_doesnt_exists();
 
+<<<<<<< HEAD
+=======
+	cout << "TRYING TO GET A ARTICLE" << endl;
+>>>>>>> 6f74f93f974d112936328b7a913c30fad89cc222
 	return listArticlesInNg(ng_id).find(id)->second;
 }
 
