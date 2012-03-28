@@ -240,14 +240,16 @@ int main(int argc, char* argv[]) {
 	//testStorageDisk();
 
 
-	const int defaultPort = 30004;
+	int port = 30004;
 	if (argc != 2) {
 		cerr << "No port defined. Usage: myserver portnumber " << endl;
-		cout << "Using default port:" << defaultPort << " instead " << endl;
+		cout << "Using default port:" << port << " instead " << endl;
 		//exit(1);
+	}else{
+		port=atoi(argv[1]);
 	}
 
-	Server server(defaultPort);
+	Server server(port);
 	if (!server.isReady()) {
 		cerr << "Server initialization error" << endl;
 		exit(1);

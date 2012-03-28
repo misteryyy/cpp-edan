@@ -15,13 +15,13 @@ using namespace client_server;
 using client_server::Connection;
 using client_server::ConnectionClosedException;
 
-static const string 	LIST_NG    = "ListNg";
-static const string     CREATE_NG  = "AddNg";
-static const string     DELETE_NG  = "DeleteNg";
-static const string     LIST_ART   = "ListArticles";
-static const string     CREATE_ART = "AddArticle";
-static const string     DELETE_ART = "DeleteArticle";
-static const string     READ_ART   = "ReadArticle";
+static const int     LIST_NG    = 1;
+static const int     CREATE_NG  = 4;
+static const int     DELETE_NG  = 5;
+static const int     LIST_ART   = 2;
+static const int     CREATE_ART = 6;
+static const int     DELETE_ART = 7;
+static const int     READ_ART   = 3;
 ProtocolHandler *ph;
 
 //if the next command is i return true else write error and return false
@@ -43,7 +43,9 @@ void listNg(){
 		int nbrOfNg=ph->readProtocolNbr();
 		cout<<"<--Newsgroups-->"<<endl;
 		for(int i=0;i<nbrOfNg;i++){
-			cout<<ph->readProtocolNbr()<<": "<<ph->readProtocolString()<<endl;
+			int ng_num=ph->readProtocolNbr();
+			string title=ph->readProtocolString();
+			cout<<ng_num<<": "<<title<<endl;
 		}
 
 	}else{
@@ -53,10 +55,7 @@ void listNg(){
 }
 //COM_CREATE_NG string_p COM_END
 //ANS_CREATE_NG [ANS_ACK | ANS_NAK ERR_NG_ALREADY_EXISTS] ANS_END
-void createNg(stringstream& ss){
-	if(!ss.eof()){
-		string title;
-		ss>>title;
+void createNg(string& title){
 		ph->writeChar(Protocol::COM_CREATE_NG);
 		ph->writeProtocolString(title);
 		ph->writeChar(Protocol::COM_END);
@@ -70,86 +69,212 @@ void createNg(stringstream& ss){
 			cerr<<"Server error, unknown command"<<endl;
 		}
 		expectCommand(Protocol::ANS_END);
-
-//		int command=ph->readChar();
-//		if(command!=Protocol::ANS_CREATE_NG){
-//			cerr<<"Server error, client did not receive ans_create_ng command, command was: "<<command<<endl;
-//			return;
-//		}
-//		command=ph->readChar();
-//		if(command==Protocol::ANS_ACK){
-//			cout<<"Newsgroup: "<<title<<" was successfully created!"<<endl;
-//		}else if(command==Protocol::ANS_NAK){
-//			ph->readChar();// read ERR_NG_ALREADY_EXISTS
-//			cerr<<"Error newsgroup with title: "<<title<<" already exists "<<command<<endl;
-//		}else{
-//			cerr<<"Server error, unknown command"<<endl;
-//		}
-//		command=ph->readChar();
-//		if(command!=Protocol::ANS_END){
-//			cerr<<"Server error, missing command ANS_END"<<endl;
-//		}
-	}else{
-		cerr<<"Missing argument <title> for command AddNg <title>"<<endl;
-	}
 }
 //COM_DELETE_NG num_p COM_END
 //ANS_DELETE_NG [ANS_ACK | ANS_NAK ERR_NG_DOES_NOT_EXIST] ANS_END
-void deleteNg(stringstream& ss){
-
+void deleteNg(int ng_nbr){
+		ph->writeChar(Protocol::COM_DELETE_NG);
+		ph->writeProtocolNbr(ng_nbr);
+		ph->writeChar(Protocol::COM_END);
+		if(expectCommand(Protocol::ANS_DELETE_NG)){
+			if(expectCommand(Protocol::ANS_ACK)){
+				cout<<"Newsgroup "<<ng_nbr<<" successfully deleted"<<endl;
+			}else if(expectCommand(Protocol::ANS_NAK)){
+				expectCommand(Protocol::ERR_ART_DOES_NOT_EXIST);
+				cerr<<"Failed to delete newsgroup "<<ng_nbr<<", it does not exist"<<endl;
+			}else{
+				cerr<<"Server error, unknown command"<<endl;
+			}
+		}
+		expectCommand(Protocol::ANS_END);
 }
 //COM_LIST_ART num_p COM_END
 //ANS_LIST_ART [ANS_ACK num_p [num_p string_p]* |ANS_NAK ERR_NG_DOES_NOT_EXIST] ANS_END
-void listArt(stringstream& ss){
-
+void listArt(int ng_num){
+		ph->writeChar(Protocol::COM_LIST_ART);
+		ph->writeProtocolNbr(ng_num);
+		ph->writeChar(Protocol::COM_END);
+		if(expectCommand(Protocol::ANS_LIST_ART)){
+			if(expectCommand(Protocol::ANS_ACK)){
+				int nbrOfArt=ph->readProtocolNbr();
+				cout<<"<--Articles in NG: "<<ng_num<<"-->"<<endl;
+				for(int i=0;i<nbrOfArt;i++){
+					int art_num=ph->readProtocolNbr();
+					string art_name=ph->readProtocolString();
+					cout<<art_num<<": "<<art_name<<endl;
+				}
+			}else if(expectCommand(Protocol::ANS_NAK)){
+				expectCommand(Protocol::ERR_NG_DOES_NOT_EXIST);
+				cerr<<"Failed to list articles because NG "<<ng_num<<" does not exist"<<endl;
+			}
+		}else{
+			cerr<<"Server error when listing articles, unknown command"<<endl;
+		}
+		expectCommand(Protocol::ANS_END);
 }
 //COM_CREATE_ART num_p string_p string_p string_p COM_END
 //ANS_CREATE_ART [ANS_ACK | ANS_NAK ERR_NG_DOES_NOT_EXIST] ANS_END
-void createArt(stringstream& ss){
-
+void createArt(int ng_num, string title, string author, string text){
+		ph->writeChar(Protocol::COM_CREATE_ART);
+		ph->writeProtocolNbr(ng_num);
+		ph->writeProtocolString(title);
+		ph->writeProtocolString(author);
+		ph->writeProtocolString(text);
+		ph->writeChar(Protocol::COM_END);
+		if(expectCommand(Protocol::ANS_CREATE_ART)){
+			if(expectCommand(Protocol::ANS_ACK)){
+				cout<<"Article: "<<title<<" successfully created!"<<endl;
+			}else if(expectCommand(Protocol::ANS_NAK)){
+				expectCommand(Protocol::ERR_NG_DOES_NOT_EXIST);
+				cerr<<"Failed to create article: "<<title<<" in NG: "<<ng_num<<", NG does not exist"<<endl;
+			}else{
+				cerr<<"Server error when creating article, unknown command"<<endl;
+			}
+		}else{
+			cerr<<"Server error when creating article, unknown command"<<endl;
+		}
+		expectCommand(Protocol::ANS_END);
 }
+//group and article (num_p)
 //COM_DELETE_ART num_p num_p COM_END
 //ANS_DELETE_ART [ANS_ACK |ANS_NAK [ERR_NG_DOES_NOT_EXIST | ERR_ART_DOES_NOT_EXIST]] ANS_END
-void deleteArt(stringstream& ss){
-
+void deleteArt(int ng_nbr, int art_nbr){
+		ph->writeChar(Protocol::COM_DELETE_ART);
+		ph->writeProtocolNbr(ng_nbr);
+		ph->writeProtocolNbr(art_nbr);
+		ph->writeChar(Protocol::COM_END);
+		if(expectCommand(Protocol::ANS_DELETE_ART)){
+			if(expectCommand(Protocol::ANS_ACK)){
+				cout<<" Article with id: "<<art_nbr<<" in NG: "<<ng_nbr<<" was successfully deleted"<<endl;
+			}else if(expectCommand(Protocol::ANS_NAK)){
+				if(expectCommand(Protocol::ERR_NG_DOES_NOT_EXIST)){
+					cerr<<"Error when deleting article, newsgroup does not exist"<<endl;
+				}else if(expectCommand(Protocol::ERR_ART_DOES_NOT_EXIST)){
+					cerr<<"Error when deleting article, article does not exist"<<endl;
+				}
+			}else{
+				cerr<<"Server error when removing article, unknown command"<<endl;
+			}
+		}else{
+			cerr<<"Server error when removing article, unknown command"<<endl;
+		}
+		expectCommand(Protocol::ANS_END);
 }
 //COM_GET_ART num_p num_p COM_END
 //ANS_GET_ART [ANS_ACK string_p string_p string_p |ANS_NAK [ERR_NG_DOES_NOT_EXIST | ERR_ART_DOES_NOT_EXIST]] ANS_END
-void readArt(stringstream& ss){
-
+void readArt(int ng_nbr,int art_nbr){
+		ph->writeChar(Protocol::COM_GET_ART);
+		ph->writeProtocolNbr(ng_nbr);
+		ph->writeProtocolNbr(art_nbr);
+		ph->writeChar(Protocol::COM_END);
+		if(expectCommand(Protocol::ANS_GET_ART)){
+			if(expectCommand(Protocol::ANS_ACK)){
+				string title=ph->readProtocolString();
+				string author=ph->readProtocolString();
+				string text=ph->readProtocolString();
+				cout<<"------------"<<endl;
+				cout<<title<< " by "<<author<<endl;
+				cout<<endl;
+				cout<<text<<endl;
+				cout<<"------------"<<endl;
+			}else if(expectCommand(Protocol::ANS_NAK)){
+				if(expectCommand(Protocol::ERR_NG_DOES_NOT_EXIST)){
+					cerr<<"Error when reading article, newsgroup does not exist"<<endl;
+				}else if(expectCommand(Protocol::ERR_ART_DOES_NOT_EXIST)){
+					cerr<<"Error when reading article, article does not exist"<<endl;
+				}
+			}
+		}else{
+			cerr<<"Server error when reading article, unknown command"<<endl;
+		}
+		expectCommand(Protocol::ANS_END);
 }
 void printMenu(){
 	cout<<"------------"<<endl;
-	cout<<"Please enter one of the following commands to be executed:"<<endl;
-	cout<<"ListNg"<<endl;
-	cout<<"ListArticles <ng_id>"<<endl;
-	cout<<"ReadArticle <ng_id> <art_id>"<<endl;
-	cout<<"AddNg <title>"<<endl;
-	cout<<"DeleteNg <ng_id>"<<endl;
-	cout<<"AddArticle <ng_id> <title> <author> <text>"<<endl;
-	cout<<"DeleteArticle <ng_id> <art_id>"<<endl;
+	cout<<"Please enter the number for one of the following commands to be executed:"<<endl;
+	cout<<"1:ListNg"<<endl;
+	cout<<"2:ListArticles"<<endl;
+	cout<<"3:ReadArticle"<<endl;
+	cout<<"4:AddNg"<<endl;
+	cout<<"5:DeleteNg"<<endl;
+	cout<<"6:AddArticle"<<endl;
+	cout<<"7:DeleteArticle"<<endl;
 	cout<<"------------"<<endl;
 }
 void processCommand(string command){
-	stringstream ss(command);
-	string firstcommand;
-	ss>>firstcommand;
-	if(firstcommand.compare(LIST_NG)==0){
+	int choice;
+	stringstream css(command);
+	css>>choice;
+	if((LIST_NG)==choice){
 		listNg();
-	}else if(firstcommand.compare(CREATE_NG)==0){
-		createNg(ss);
-	}else if(firstcommand.compare(DELETE_NG)==0){
-		deleteNg(ss);
-	}else if(firstcommand.compare(LIST_ART)==0){
-		listArt(ss);
-	}else if(firstcommand.compare(CREATE_ART)==0){
-		createArt(ss);
-	}else if(firstcommand.compare(DELETE_ART)==0){
-		deleteArt(ss);
-	}else if(firstcommand.compare(READ_ART)==0){
-		readArt(ss);
+	}else if((CREATE_NG)==choice){
+		string title;
+		cout<<"Please enter title"<<endl;
+		getline(cin, title);
+		createNg(title);
+	}else if((DELETE_NG)==choice){
+		string ng_num;
+		cout<<"Enter the id for the newsgroup to be deleted"<<endl;
+		getline(cin, ng_num);
+		stringstream ss(ng_num);
+		int i;
+		ss>>i;
+		deleteNg(i);
+	}else if((LIST_ART)==choice){
+		string ng_num;
+		cout<<"Enter the id for the newsgroup to list articles for"<<endl;
+		getline(cin, ng_num);
+		stringstream ss(ng_num);
+		int i;
+		ss>>i;
+		listArt(i);
+	}else if((CREATE_ART)==choice){
+		cout<<"Enter the id for the newsgroup to create a article in"<<endl;
+		string tmp;
+		getline(cin, tmp);
+		stringstream ss(tmp);
+		int ng_num;
+		ss>>ng_num;
+		cout<<"Enter the title of the article:"<<endl;
+		string title;
+		getline(cin, title);
+		cout<<"Enter the author of the article:"<<endl;
+		string author;
+		getline(cin, author);
+		cout<<"Enter the article text:"<<endl;
+		string text;
+		getline(cin, text);
+		createArt(ng_num,title,author,text);
+	}else if((DELETE_ART)==choice){
+		string tmp;
+		cout<<"Enter the newsgroup id (delete art)"<<endl;
+		getline(cin, tmp);
+		stringstream ss(tmp);
+		int ng_nbr;
+		ss>>ng_nbr;
+		cout<<"Enter the article id (delete art)"<<endl;
+		tmp="";
+		getline(cin, tmp);
+		stringstream ss2(tmp);
+		int art_nbr;
+		ss2>>art_nbr;
+		deleteArt(ng_nbr,art_nbr);
+	}else if((READ_ART)==choice){
+		string tmp;
+		cout<<"Enter the newsgroup id (read art)"<<endl;
+		getline(cin, tmp);
+		stringstream ss(tmp);
+		int ng_nbr;
+		ss>>ng_nbr;
+		cout<<"Enter the article id (read art)"<<endl;
+		tmp="";
+		getline(cin, tmp);
+		stringstream ss2(tmp);
+		int art_nbr;
+		ss2>>art_nbr;
+		readArt(ng_nbr,art_nbr);
 	}else{
-		cout<<"Bad command: "<<firstcommand<<" be careful with upper/lower case"<<endl;
+		cout<<"Bad command: "<<choice<<endl;
 	}
 }
 int main(int argc, char* argv[]) {
