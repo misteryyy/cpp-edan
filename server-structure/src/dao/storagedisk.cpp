@@ -62,6 +62,22 @@ using namespace std;
 	return parse;
  }
 
+ void StorageDisk::saveLastIndex(){
+	string settingPath = baseDir + "settings.txt";
+
+		ofstream out(settingPath.c_str());
+
+		if (! out) {
+			       cerr << "Could not open data file with settings for saving IDs" << endl;
+			        exit(1);
+		} else {
+			 // saving data
+			 out << lastNgId << " " << lastArtId;
+			 out.close();
+			 cout << lastNgId << " and " << lastArtId << " we saved " << endl;
+		}
+}
+
 StorageDisk::StorageDisk(){
 	baseDir = "./storage/";
 	// load data to the newsgroups map
@@ -112,11 +128,7 @@ StorageDisk::~StorageDisk(){
 		 out.close();
 		 cout << lastNgId << " and " << lastArtId << " we saved " << endl;
 	}
-
-
-
 }
-
 
 void StorageDisk::buildNgList(){
 	// loading file structure to the list for manipulating with NG methods
@@ -237,6 +249,7 @@ void StorageDisk::createNg(const string & name) throw (newsgroup_already_exists)
 	// rebuild newsgroupList
 	// TODO possible solution, to add just new id to the map and not call rebuild
 	buildNgList();
+	saveLastIndex();
 }
 
 /**
@@ -272,7 +285,7 @@ void StorageDisk::deleteNg(unsigned int index)  throw(newsgroup_doesnt_exists){
 	// rebuild newsgroupList
 	// TODO possible solution, delete only newsgroup
 	buildNgList();
-
+	saveLastIndex();
 }
 
 
@@ -312,10 +325,11 @@ int StorageDisk::createArticle(int ng_id, const string & title ,const string & a
 	//creating new article in newsgroup folder
 	ofstream outfile (file_path.c_str());
 	string proc = ng_dir + a.getFileName();
-	outfile << text << std::endl;
+	outfile << text;
 	outfile.close();
-
-	return 	lastArtId++;
+	lastArtId++;
+	saveLastIndex();
+	return 	lastArtId;
 }
 
 /**
@@ -390,7 +404,7 @@ void StorageDisk::deleteArticle(int id, int ng_id)  throw(newsgroup_doesnt_exist
 
 	//cout << "This article will be deleted" << remove(article_path.c_str()) << endl;
 	if(remove(article_path.c_str()) != 0) throw article_doesnt_exists(); // something bad happened with the file :D
-
+	saveLastIndex();
 }
 
 // TODO DELETE THIS, WE DON=T NEED IT
@@ -409,10 +423,7 @@ Article& StorageDisk::findArticle(int id,int ng_id) throw(newsgroup_doesnt_exist
 
 	if(testArticleId(id,ng_id) == 0 ) throw article_doesnt_exists();
 
-<<<<<<< HEAD
-=======
 	cout << "TRYING TO GET A ARTICLE" << endl;
->>>>>>> 6f74f93f974d112936328b7a913c30fad89cc222
 	return listArticlesInNg(ng_id).find(id)->second;
 }
 

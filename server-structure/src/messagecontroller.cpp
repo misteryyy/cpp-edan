@@ -12,6 +12,7 @@
 #include "dao/storageinterface.h"
 #include "dao/storagefactory.h"
 #include "core/connectionclosedexception.h"
+//#include "protocolhandler.h"
 #include <sstream>
 #include <iostream>
 #include <string>
@@ -19,6 +20,8 @@
 using namespace protocol;
 using namespace std;
 namespace client_server {
+
+//ProtocolHandler *ph;
 
 int readNumber(Connection * conn) throw (ConnectionClosedException) {
 	unsigned char byte1 = conn->read();
@@ -76,7 +79,7 @@ string readProtocolString(Connection * conn) {
 }
 
 MessageController::MessageController(){
-	storage = StorageFactory::getDAO("memory");
+	storage = StorageFactory::getDAO("disk");
 }
 
 MessageController::~MessageController() {
@@ -105,6 +108,7 @@ void MessageController::closeConnection(Connection * conn){
 */
 
 void MessageController::execute(int command, Connection * conn, Server * server){
+	//ph = new ProtocolHandler(conn);
 
 	switch (command) {
 

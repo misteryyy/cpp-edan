@@ -272,6 +272,5 @@ int main(int argc, char* argv[]) {
 	}
 	cout << "Should run destructur" << endl;
 	// should run destructur here...
-	delete mc;
 }
 

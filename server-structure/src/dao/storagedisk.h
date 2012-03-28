@@ -24,6 +24,8 @@ public:
 		StorageDisk();
 		virtual ~StorageDisk();
 
+		virtual void saveLastIndex();
+
    	    /**
    		* Newsgroup methods
    		*/
