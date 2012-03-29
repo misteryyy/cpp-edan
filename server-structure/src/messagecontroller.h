@@ -14,7 +14,7 @@
 namespace client_server {
 class MessageController {
 public:
-	MessageController();
+	MessageController(const string& s);
 	virtual ~MessageController();
 	//void closeConnection(Connection * conn);
 	void execute(int command, Connection* conn, Server* server);

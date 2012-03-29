@@ -78,8 +78,13 @@ string readProtocolString(Connection * conn) {
 	return 0;
 }
 
-MessageController::MessageController(){
-	storage = StorageFactory::getDAO("disk");
+MessageController::MessageController(const string& storage_type){
+
+	storage = StorageFactory::getDAO(storage_type);
+	if(storage == 0){
+		cerr << "Wrong storage input: must be \"disk\" or \"memory\"" << endl;
+		exit(1);
+	}
 }
 
 MessageController::~MessageController() {

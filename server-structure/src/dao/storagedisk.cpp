@@ -105,8 +105,8 @@ StorageDisk::StorageDisk(){
 	 in.close();
 	 }
 
-	 cout << "Program started with NG ID " << newsgroupID;
-	 cout << " and Article ID" << articleID << endl;
+	 //cout << "Program started with NG ID " << newsgroupID;
+	 //cout << " and Article ID" << articleID << endl;
 
 }
 /**

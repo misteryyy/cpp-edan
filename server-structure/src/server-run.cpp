@@ -232,7 +232,6 @@ void testStorageDisk() {
 
 
 int main(int argc, char* argv[]) {
-	MessageController mc;
 	//testStorageMemory();
 
 	// dont forget to use delete when you will be finished with the using of storage
@@ -240,16 +239,19 @@ int main(int argc, char* argv[]) {
 	//testStorageDisk();
 
 
-	int port = 30004;
-	if (argc != 2) {
-		cerr << "No port defined. Usage: myserver portnumber " << endl;
-		cout << "Using default port:" << port << " instead " << endl;
-		//exit(1);
-	}else{
-		port=atoi(argv[1]);
+	if (argc != 3) {
+		cerr << "Usage: myserver portnumber storage" << endl;
+		exit(1);
 	}
 
+	int port=atoi(argv[1]);
+	string storage_type = argv[2];
+
+	MessageController mc(storage_type);
+
 	Server server(port);
+
+	cout << "Client initiated with port: " << port << " and storage type: " << storage_type << endl;
 	if (!server.isReady()) {
 		cerr << "Server initialization error" << endl;
 		exit(1);
