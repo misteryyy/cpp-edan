@@ -4,11 +4,11 @@
  *  Created on: Mar 23, 2012
  *      Author: buffalo
  */
-#include "dao/storageinterface.h"
-#include "dao/storagefactory.h"
+#include "../dao/storageinterface.h"
+#include "../dao/storagefactory.h"
+#include "../core/connection.h"
+#include "../core/server.h"
 
-#include "core/connection.h"
-#include "core/server.h"
 #ifndef MESSAGECONTROLLER_H_
 #define MESSAGECONTROLLER_H_
 namespace client_server {

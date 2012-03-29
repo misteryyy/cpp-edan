@@ -6,13 +6,13 @@
  */
 
 #include "messagecontroller.h"
-#include "core/protocol.h"
-#include "core/connection.h"
-#include "core/server.h"
-#include "dao/storageinterface.h"
-#include "dao/storagefactory.h"
-#include "core/connectionclosedexception.h"
-//#include "protocolhandler.h"
+#include "../core/protocol.h"
+#include "../core/connection.h"
+#include "../core/server.h"
+#include "../dao/storageinterface.h"
+#include "../dao/storagefactory.h"
+#include "../core/connectionclosedexception.h"
+
 #include <sstream>
 #include <iostream>
 #include <string>

@@ -9,15 +9,14 @@
 #include <string>
 #include <cstdlib>
 #include <sstream>
-
 #include <assert.h>
 
-#include "core/connection.h"
-#include "core/protocol.h"
-#include "core/server.h"
-#include "core/connectionclosedexception.h"
-#include "dao/storageinterface.h"
-#include "dao/storagefactory.h"
+#include "../core/connection.h"
+#include "../core/protocol.h"
+#include "../core/server.h"
+#include "../core/connectionclosedexception.h"
+#include "../dao/storageinterface.h"
+#include "../dao/storagefactory.h"
 #include "messagecontroller.h"
 #include <sys/types.h>
 #include <sys/stat.h>
